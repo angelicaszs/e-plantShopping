@@ -5,6 +5,12 @@
     /* background-color: red; */
     text-align: justify;
   }
+
+  .aboutus_container p {
+    text-align: justify;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
   
   .about-us-heading {
     font-size: 32px;
