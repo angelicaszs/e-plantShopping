@@ -44,7 +44,7 @@ const CartItem = ({ onContinueShopping, onRemoveFromCart }) => {
 
   const handleCheckoutShopping = (e) => {
     e.preventDefault();
-    alert('Functionality to be added later for checkout');
+    alert('Comming soon! Thank you for shopping with us!');
   };
 
   return (
