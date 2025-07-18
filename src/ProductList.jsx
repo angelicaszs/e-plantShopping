@@ -1,13 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import './ProductList.css';
 import CartItem from './CartItem';
-import { addItem, removeItem, updateQuantity } from './CartSlice';
+import { addItem } from './CartSlice';
+import PropTypes from 'prop-types';
+
 function ProductList({ onHomeClick }) {
   const [showCart, setShowCart] = useState(false);
   const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
 
   const [addedToCart, setAddedToCart] = useState({});
+
+  const items = useSelector((state) => state.cart.items);
 
   const dispatch = useDispatch();
 
@@ -303,6 +307,13 @@ function ProductList({ onHomeClick }) {
     }));
   };
 
+  const handleRemoveFromCart = (plantName) => {
+    setAddedToCart((prev) => ({
+      ...prev,
+      [plantName]: false
+    }));
+  };
+
   return (
     <div>
       <div className='navbar' style={styleObj}>
@@ -351,6 +362,9 @@ function ProductList({ onHomeClick }) {
                     id='mainIconPathAttribute'
                   ></path>
                 </svg>
+                <span className='cart_quantity_count'>
+                  {items.reduce((total, item) => total + item.quantity, 0)}
+                </span>
               </h1>
             </a>
           </div>
@@ -375,10 +389,17 @@ function ProductList({ onHomeClick }) {
                     <p className='product-price'>{plant.cost}</p>
                     <p>{plant.description}</p>
                     <button
-                      className='product-button'
+                      disabled={addedToCart[plant.name]}
+                      className={
+                        addedToCart[plant.name]
+                          ? 'product-button added-to-cart'
+                          : 'product-button'
+                      }
                       onClick={() => handleAddToCard(plant)}
                     >
-                      Add to Cart
+                      {addedToCart[plant.name]
+                        ? 'Added to Cart'
+                        : 'Add to Cart'}
                     </button>
                   </div>
                 ))}
@@ -387,10 +408,17 @@ function ProductList({ onHomeClick }) {
           ))}
         </div>
       ) : (
-        <CartItem onContinueShopping={handleContinueShopping} />
+        <CartItem
+          onContinueShopping={handleContinueShopping}
+          onRemoveFromCart={handleRemoveFromCart}
+        />
       )}
     </div>
   );
 }
+
+ProductList.propTypes = {
+  onHomeClick: PropTypes.func.isRequired
+};
 
 export default ProductList;
